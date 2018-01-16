@@ -1,18 +1,23 @@
 const express = require('express');
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const authConfig = require('../config/auth.json');
+
+const secret  = require('../config/auth.json').secret;
 
 const User = require('../models/user');
 
 const router = express.Router();
  
-function generaToken(params = {}) {
-  return jwt.sign({ id: user.id }, authConfig.secret, { expiresIn: 86400 });
+async function generateToken(params = {}, secret) {
+  return await jwt.sign(params , secret, { expiresIn: 86400 });
 }
 
 router.get('/', async (req, res) => {
-  res.send(await User.find());
+  try {
+    res.send(await User.find());    
+  } catch (err) {
+    res.send({error : error});
+  }
 });
 
 router.post('/register', async (req, res) => { 
@@ -21,14 +26,14 @@ router.post('/register', async (req, res) => {
     user.password = undefined; 
     res.send({
       user,
-      token: generaToken({ id: user.id })
+      token: await generateToken({ id: user.id }, secret)
     });
   } catch (err) {
-    res.status(400).send({error: 'register failed'})
+    res.status(400).send({ error : err.message })
   } 
 });
 
-router.post('/autenticate', async (req, res) => {
+router.post('/authenticate', async (req, res) => {
   const { email, password } = req.body;
 
   const user = await User.findOne({ email }).select('+password');
@@ -42,9 +47,9 @@ router.post('/autenticate', async (req, res) => {
   }  
 
   res.send({ 
-      user,
-      token: generaToken({ id: user.id })
-    })
+    user,
+    token: await generateToken({ id: user.id }, secret)
+  })  
 });
 
-module.exports = app => app.use('/auth', router)
+module.exports = app => app.use('/auth', router);
