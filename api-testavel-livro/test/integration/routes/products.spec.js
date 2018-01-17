@@ -10,8 +10,9 @@ describe('route products', () => {
       request
         .get('/products')
         .end((err, res) => {
-          expect(res.body[0].to.eql(defaultProduct))
+          expect(res.body[0]).to.be.eql(defaultProduct)
           done(err);
-        });
+        }); 
     });
   });
+});
