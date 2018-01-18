@@ -1,13 +1,10 @@
 const router = require('express').Router();
 
-router.get('/', (req, res) => {
-  const defaultProduct = {
-    name: 'product',
-    description: 'product description',
-    price: 100
-  } 
+const ProductsController = require('../controllers/products');
 
-  res.send([defaultProduct]);
+const productsController = new ProductsController();
+router.get('/', (req, res) => {
+  productsController.get(req, res);
 });
 
 module.exports = router;
