@@ -1,5 +1,7 @@
-const ProductsController = require('../../../src/controllers/products');
 const sinon = require('sinon');
+
+const ProductsController = require('../../../src/controllers/products');
+const Product = require('../../../src/models/product');
 
 describe('Controllers: Products', () => {
   const defaultProduct = {
@@ -9,19 +11,21 @@ describe('Controllers: Products', () => {
   } 
 
   describe('get() products', () => {
-    it('should return a list of products', () => {
-      const productsController = new ProductsController();
-
+    it('should call send with a list of products', () => {
       const request = {};
       const response = {
         send: sinon.spy()
       }
 
-      productsController.get(request, response);
-
-      expect(response.send.called).to.be.true;
-
-      expect(response.send.calledWith([defaultProduct])).to.be.true;
-    })
+      Product.find = sinon.stub();
+      
+      Product.find.withArgs({}).resolves(defaultProduct);
+      const productsController = new ProductsController(Product);
+     
+      return productsController.get(request, response)
+        .then(() => {
+          sinon.assert.calledWith(response.send, defaultProduct);
+        });
+    });
   });
 });

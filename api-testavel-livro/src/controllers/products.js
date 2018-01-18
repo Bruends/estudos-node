@@ -1,12 +1,11 @@
 class ProductsController {
+  constructor(product){
+    this.Product = product;
+  }
+
   get(req, res) {
-    res.send([
-      {
-        name: 'product',
-        description: 'product description',
-        price: 100
-      } 
-    ])
+    return this.Product.find({})
+      .then(products => res.send(products));
   }
 }
 
