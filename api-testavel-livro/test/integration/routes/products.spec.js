@@ -1,4 +1,13 @@
 describe('route products', () => {
+  let request;
+
+  before(() => {
+    return setupApp()
+      .then(app => {
+        request = supertest(app)
+      })
+  })
+
   const defaultProduct = {
     name: 'product',
     description: 'product description',
@@ -12,7 +21,7 @@ describe('route products', () => {
         .end((err, res) => {
           expect(res.body[0]).to.be.eql(defaultProduct)
           done(err);
-        }); 
+        });
     });
   });
 });

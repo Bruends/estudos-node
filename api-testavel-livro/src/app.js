@@ -1,11 +1,16 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
+const dataBase = require('./config/database');
 const router = require('./routes/');
 
-const app = express();
-app.use(bodyParser.json());
 
-app.use('/', router);
+const configExpress = () => {
+  const app = express();
+  app.use(bodyParser.json());
+  app.use('/', router);
 
-module.exports = app;
+  return app;
+}
+
+module.exports = () => dataBase.connect().then(configExpress);

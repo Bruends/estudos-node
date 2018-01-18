@@ -1,1 +1,1 @@
-[construindo apis testaveis](https://leanpub.com/construindo-apis-testaveis-com-nodejs/)
+seguindo o livro [construindo apis testaveis](https://leanpub.com/construindo-apis-testaveis-com-nodejs/)
