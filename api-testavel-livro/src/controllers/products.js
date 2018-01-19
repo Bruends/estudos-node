@@ -1,5 +1,7 @@
+const Product = require('../models/product');
+
 class ProductsController {
-  constructor(product){
+  constructor(product = Product){
     this.Product = product;
   }
 
